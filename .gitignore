@@ -1,0 +1,10 @@
+# Poetry virtual environment and package distribution directory
+.venv/
+dist/
+
+# PyCharm IDE settings
+.idea/
+
+# Python bytecode and caches
+__pycache__/
+*.pyc
