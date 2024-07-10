@@ -4,7 +4,7 @@ import argparse
 from byte_formatter.formatter import format_size
 
 
-def main():
+def _parse_args():
     parser = argparse.ArgumentParser(
         description="Convert a file size to a human-readable format.")
     parser.add_argument("size", type=int, help="The file size in bytes.")
@@ -68,7 +68,11 @@ def main():
         help="Use single-letter Unix-style unit names (B, K, M, G, T, P).",
     )
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    args = _parse_args()
 
     # Determine whether to use uppercase or lowercase units
     uppercase_units = not args.lowercase_units
