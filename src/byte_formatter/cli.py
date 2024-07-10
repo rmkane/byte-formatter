@@ -1,18 +1,62 @@
 #!/usr/bin/env python3
-import argparse
+"""
+This module provides a command-line interface (CLI) for the byte-formatter
+package, allowing users to convert file sizes to a human-readable format using
+various options.
+"""
 
+import argparse
 from byte_formatter.formatter import format_size
 
 
 def _parse_args():
+    """
+    Parses the command-line arguments provided by the user.
+
+    Returns:
+        argparse.ArgumentParser: The parser instance.
+        argparse.Namespace: The parsed arguments.
+    """
     parser = argparse.ArgumentParser(
         description="Convert a file size to a human-readable format.")
+
+    # Define arguments and options for the CLI
     parser.add_argument("size", type=int, help="The file size in bytes.")
-    parser.add_argument(
+    unit_group = parser.add_argument_group("Unit options")
+    unit_group.add_argument(
         "-b",
         "--binary",
         action="store_true",
         help="Use binary (base-1024) units (KiB, MiB, etc.).",
+    )
+    unit_group.add_argument(
+        "-S",
+        "--si-units",
+        action="store_true",
+        help=
+        "Use SI units (kB, MB, etc.) which are base-1000 but with different "
+        "symbols.",
+    )
+    unit_group.add_argument(
+        "-u",
+        "--unit-case",
+        choices=["upper", "lower"],
+        default="upper",
+        help=
+        "Use uppercase (KB, MB) or lowercase (kb, mb) unit symbols. Default "
+        "is uppercase.",
+    )
+    unit_group.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Use verbose unit names (Bytes, Kilobytes, etc.).",
+    )
+    unit_group.add_argument(
+        "-x",
+        "--unix-style",
+        action="store_true",
+        help="Use single-letter Unix-style unit names (B, K, M, G, T, P).",
     )
     parser.add_argument(
         "-p",
@@ -34,49 +78,22 @@ def _parse_args():
         action="store_true",
         help="Strip trailing zeros from the formatted size.",
     )
-    parser.add_argument(
-        "-S",
-        "--si-units",
-        action="store_true",
-        help=("Use SI units (kB, MB, etc.) which are also base-1000 but with"
-              " different symbols."),
-    )
-    parser.add_argument(
-        "-U",
-        "--uppercase-units",
-        action="store_true",
-        help=(
-            "Use uppercase unit symbols (KB, MB). Default if neither -U nor -l"
-            " is set."),
-    )
-    parser.add_argument(
-        "-l",
-        "--lowercase-units",
-        action="store_true",
-        help="Use lowercase unit symbols (kb, mb). Overrides -U.",
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="Use verbose unit names (Bytes, Kilobytes, etc.).",
-    )
-    parser.add_argument(
-        "-x",
-        "--unix-style",
-        action="store_true",
-        help="Use single-letter Unix-style unit names (B, K, M, G, T, P).",
-    )
 
-    return parser.parse_args()
+    return parser, parser.parse_args()
 
 
 def main():
-    args = _parse_args()
+    """
+    The main function of the CLI. It parses arguments, validates them, and then
+    formats the provided file size according to the specified options.
+    """
+    parser, args = _parse_args()
 
-    # Determine whether to use uppercase or lowercase units
-    uppercase_units = not args.lowercase_units
+    # Validate the provided file size to ensure it's non-negative
+    if args.size < 0:
+        parser.error("The file size must be a non-negative integer.")
 
+    # Format the size based on the provided arguments and options
     formatted_size = format_size(
         size=args.size,
         binary=args.binary,
@@ -84,7 +101,7 @@ def main():
         suffix=args.suffix,
         strip_trailing_zeros=args.strip_trailing_zeros,
         si_units=args.si_units,
-        uppercase_units=uppercase_units,
+        uppercase_units=args.unit_case == "upper",
         verbose=args.verbose,
         unix_style=args.unix_style,
     )
