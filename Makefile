@@ -16,7 +16,7 @@ build: # Build the package
 	poetry build
 
 publish: build # Publish the package to PyPI
-	poetry publish --dry-run # Remove --dry-run to actually publish
+	poetry publish
 
 clean: # Clean distribution files and Python bytecode
 	rm -rf dist/

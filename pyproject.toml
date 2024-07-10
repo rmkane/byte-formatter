@@ -1,9 +1,26 @@
 [tool.poetry]
 name = "byte-formatter"
-version = "0.0.1"
+version = "0.0.2"
 description = "A Python project for formatting bytes"
 authors = ["Ryan Kane <rmkane@proton.me>"]
-packages = [{ from = "src", include = "byte_formatter" }]
+readme = "README.md"
+homepage = "https://github.com/rmkane/byte-formatter"
+repository = "https://github.com/rmkane/byte-formatter"
+documentation = "https://github.com/rmkane/byte-formatter"
+keywords = ["byte", "formatter", "cli"]
+license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Operating System :: OS Independent"
+]
+packages = [
+    { from = "src", include = "byte_formatter" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
