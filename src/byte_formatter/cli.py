@@ -9,6 +9,19 @@ import argparse
 from byte_formatter.formatter import format_size
 
 
+# noinspection PyProtectedMember
+class ExplicitDefaultsHelpFormatter(argparse.ArgumentDefaultsHelpFormatter):
+    """
+    A custom formatter class that displays the default values for all arguments
+    in the help message.
+    """
+
+    def _get_help_string(self, action):
+        if action.default is None or action.default is False:
+            return action.help
+        return super()._get_help_string(action)
+
+
 def _parse_args():
     """
     Parses the command-line arguments provided by the user.
@@ -18,7 +31,9 @@ def _parse_args():
         argparse.Namespace: The parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Convert a file size to a human-readable format.")
+        formatter_class=ExplicitDefaultsHelpFormatter,
+        description="Convert a file size to a human-readable format.",
+    )
 
     # Define arguments and options for the CLI
     parser.add_argument("size", type=int, help="The file size in bytes.")
